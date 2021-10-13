@@ -74,3 +74,25 @@ install(TARGETS heaptrack_inject
 install(FILES heaptrack_api.h
     DESTINATION ${CMAKE_INSTALL_PREFIX}/include
 )
+# libheaptrack: integrate into program
+add_library(heaptrack MODULE
+    libheaptrack.cpp
+)
+
+target_link_libraries(heaptrack LINK_PRIVATE
+    ${CMAKE_DL_LIBS}
+    ${CMAKE_THREAD_LIBS_INIT}
+    ${LIBUTIL_LIBRARY}
+    heaptrack_unwind
+    rt
+)
+
+set_target_properties(heaptrack PROPERTIES
+    VERSION ${HEAPTRACK_LIB_VERSION}
+    SOVERSION ${HEAPTRACK_LIB_SOVERSION}
+    LIBRARY_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/${LIB_INSTALL_DIR}/heaptrack"
+)
+
+install(TARGETS heaptrack
+    LIBRARY DESTINATION ${LIB_INSTALL_DIR}/heaptrack/
+)
